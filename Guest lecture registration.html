@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details Collection Form</title>
+    <!-- Tailwind CSS - still useful for layout and typography -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for a clean, modern typeface -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles and the animated gradient background */
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #6d28d9, #d946ef, #22d3ee, #f59e0b);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 1rem;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* The Glassmorphism Card Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px); /* For Safari */
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        /* Styling for the form inputs */
+        .form-input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Styling for the select dropdown arrow */
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 2.5rem;
+        }
+
+        select option {
+            background-color: #4c1d95; /* Dark purple background for options */
+            color: #ffffff;
+        }
+        
+        /* Styling for the submit button */
+        .submit-btn {
+            background: #d946ef; /* Vibrant pink/magenta */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px 0 rgba(217, 70, 239, 0.5);
+        }
+        .submit-btn:hover {
+            background: #c026d3; /* Slightly darker shade on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(217, 70, 239, 0.6);
+        }
+
+        /* Spinner for loading state */
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .feedback-message { transition: opacity 0.5s, transform 0.5s; }
+
+    </style>
+</head>
+<body>
+
+    <div class="glass-card w-full max-w-2xl">
+        <div class="p-8">
+            <div class="text-center text-white">
+                <h1 class="text-3xl font-bold">GUEST LECTURE REGISTRATION</h1>
+                <p class="mt-2 text-white/80">Fill in your information below.</p>
+            </div>
+
+            <form id="studentForm" class="mt-8 space-y-6">
+                <div>
+                    <label for="name" class="text-sm font-medium text-white/90">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="" class="form-input mt-1 block w-full px-4 py-3 rounded-lg">
+                </div>
+                <div>
+                    <label for="rollNo" class="text-sm font-medium text-white/90">Roll Number</label>
+                    <input type="text" id="rollNo" name="rollNo" required placeholder="e.g., BS31" class="form-input mt-1 block w-full px-4 py-3 rounded-lg">
+                </div>
+                <div>
+                    <label for="branch" class="text-sm font-medium text-white/90">Branch</label>
+                    <select id="branch" name="branch" required class="form-input mt-1 block w-full px-4 py-3 rounded-lg">
+                        <option value="" disabled selected>Select your branch</option>
+                        <option value="Computer Science and engineering">Computer Science and engineering</option>
+                        <option value="Computer Science and engineering (AIML)">Computer Science and engineering (AIML)</option>
+                        <option value="Computer Engineering">Computer Engineering</option>
+                        <option value="Information Technology">Information Technology</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="sapId" class="text-sm font-medium text-white/90">SAP ID</label>
+                    <input type="text" id="sapId" name="sapId" required placeholder="e.g.,57603240058" class="form-input mt-1 block w-full px-4 py-3 rounded-lg">
+                </div>
+                <div>
+                    <button type="submit" id="submitButton" class="submit-btn w-full flex justify-center items-center gap-2 py-3 px-4 rounded-lg text-base font-semibold text-white">
+                        <span id="buttonText">Submit Details</span>
+                        <div id="buttonSpinner" class="spinner hidden"></div>
+                    </button>
+                </div>
+            </form>
+
+            <div id="feedback" class="feedback-message mt-6 p-4 rounded-lg text-center font-medium opacity-0 transform -translate-y-2"></div>
+        </div>
+    </div>
+
+    <script>
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !! IMPORTANT: PASTE THE WEB APP URL YOU COPIED FROM GOOGLE APPS SCRIPT !!
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwA4MXf68b-CMeveumQaq0D2NXu0cgZSxbZ81AzZqNay2Q3-fh7zJqi9ReqaPTs1exyZA/exec';
+
+        const studentForm = document.getElementById('studentForm');
+        const submitButton = document.getElementById('submitButton');
+        const buttonText = document.getElementById('buttonText');
+        const buttonSpinner = document.getElementById('buttonSpinner');
+        const feedbackMessage = document.getElementById('feedback');
+
+        studentForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Show loading state
+            buttonText.textContent = 'Submitting...';
+            buttonSpinner.classList.remove('hidden');
+            submitButton.disabled = true;
+
+            const formData = new FormData(studentForm);
+            const data = {
+                name: formData.get('name'),
+                rollNo: formData.get('rollNo'),
+                branch: formData.get('branch'),
+                sapId: formData.get('sapId'),
+            };
+
+            // This part of the script is for sending data to Google Sheets.
+            // Using 'no-cors' mode means the script won't know if the submission was successful,
+            // but the data will still be sent. We will assume success for UI feedback.
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                showFeedback('Success! Your details have been submitted.', 'success');
+                studentForm.reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showFeedback('Error: Could not submit form. Please try again.', 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                buttonText.textContent = 'Submit Details';
+                buttonSpinner.classList.add('hidden');
+                submitButton.disabled = false;
+            });
+        });
+        
+        function showFeedback(message, type) {
+            feedbackMessage.textContent = message;
+            if (type === 'success') {
+                feedbackMessage.className = 'feedback-message mt-6 p-4 rounded-lg text-center font-medium text-green-200 bg-green-500/30 opacity-0 transform -translate-y-2';
+            } else {
+                feedbackMessage.className = 'feedback-message mt-6 p-4 rounded-lg text-center font-medium text-red-200 bg-red-500/30 opacity-0 transform -translate-y-2';
+            }
+            
+            // Animate in
+            setTimeout(() => {
+              feedbackMessage.style.opacity = '1';
+              feedbackMessage.style.transform = 'translateY(0)';
+            }, 10);
+            
+            // Animate out after 5 seconds
+            setTimeout(() => {
+                feedbackMessage.style.opacity = '0';
+                feedbackMessage.style.transform = 'translateY(-0.5rem)';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
